@@ -55,7 +55,7 @@ classdef Parameters
            obj.AntennaTx = Antenna(0,0,0,5);
            obj.AntennaRx = Antenna(0,0,0,5);
            obj.SystemEmpedance = 50;
-           obj.Targets = Target(50,0,0,0,0,0,10);
+           obj.Targets = Target(100,0,0,0,0,0,3000);
            obj.CFar = CFar(0,0,0,0,0);
         end
     end

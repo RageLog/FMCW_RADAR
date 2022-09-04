@@ -29,6 +29,7 @@ classdef SignalGenerator
         function VcoOperationSignal = generateVcoOperationSignal(obj,param,delay)
             DeltaV = param.VcomMax - param.VcomMin;
             VcoOperationSignal = param.VcomMin + (DeltaV*obj.generateModulationSignal(param,delay));
+
         end
         function out = generateVcoOutputSignal(obj,param,delay,doppler)
             out = param.VCO.A * obj.Generator(param,delay,doppler);
@@ -65,15 +66,13 @@ classdef SignalGenerator
         end
         function output = Generator(obj,param,delay,doppler)
             TempTime = obj.Time - delay;
-            w0 = 2*pi*param.Fc + doppler;
+            Fmin = param.Fc - param.C0/(2*param.DeltaR);
+            w0 = 2*pi*Fmin + doppler;
             VcoOps = obj.generateVcoOperationSignal(param,delay);
             mIntegral = cumtrapz(TempTime,VcoOps);
             mIntegral2 = cumtrapz(TempTime,VcoOps.*VcoOps);
             mIntegral3 = cumtrapz(TempTime,VcoOps.*VcoOps.*VcoOps);
             output = exp(1i*((w0*TempTime)+(param.VCO.Kvco*mIntegral)+(param.VCO.Nonlinearty_1* mIntegral2)+(param.VCO.Nonlinearty_2* mIntegral3)));
-        end
-        function drawSignals(obj)
-            
         end
     end
     methods(Static)

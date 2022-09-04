@@ -18,12 +18,28 @@ classdef SignalProcessing_1
     methods
         function obj = SignalProcessing_1(param,SignalGenerator)
             obj.mixedSignal = SignalGenerator.SplitedSignal .* conj(SignalGenerator.RxSignal);
-            obj.filteredSignal = lowpass(obj.mixedSignal,((param.Fd*param.Rmax)/(param.C0*param.Ts))+((param.Fc*param.Vmax)/param.C0),param.Fs);
-            figure()
-            plot(SignalGenerator.Time,imag(obj.filteredSignal))
+            obj.filteredSignal = lowpass(obj.mixedSignal,((param.Fd*param.Rmax)/(param.C0*param.Ts))+((param.Fc*param.Vmax)/param.C0),param.Fs);          
             obj = obj.windowing(param);
+            X = obj.UpChirpWindowedFunction;
+            L = length(X);
+            Y = fft(X);
+            P2 = abs(Y/L);
+            P1 = P2(1:L/2+1);
+            P1(2:end-1) = 2*P1(2:end-1);
+            f = param.Fs*(0:(L/2))/L;
+
+            figure(1)
+            plot(SignalGenerator.Time,X)
+
+            figure(2)
+            plot(f,P1) 
+            title('Single-Sided Amplitude Spectrum of X(t)')
+            xlabel('f (Hz)')
+            ylabel('|P1(f)|')
             obj = obj.FftProcess(param);
             obj = obj. CFarCalculation(param);
+
+
 
         end
         function obj = windowing(obj,param)

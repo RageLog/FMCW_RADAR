@@ -6,11 +6,11 @@ a.DeltaV = 1; % m/s
 a.Rmax = 150; % m
 a.Vmax = 450; % m/s
 
-a.TRate = 0;
+a.TRate = 0.5;
 a.Ts = 1e-6;
 a.Ts_Up = a.Ts * a.TRate;
 a.Ts_Dawn = a.Ts *(1- a.TRate);
-a.To = 1*a.Ts ;
+a.To = 128*a.Ts ;
 
 a.Fc = 10e9;
 Fmin = a.Fc - a.C0/(2*a.DeltaR);
@@ -32,6 +32,6 @@ a.LnaGain = 20;
 a.VcomMin = 0;
 a.VcomMax = 12;
 
+%% Signal generation;
 b = SignalGenerator(a);
-
-
+c = SignalProcessing_1(a,b);
